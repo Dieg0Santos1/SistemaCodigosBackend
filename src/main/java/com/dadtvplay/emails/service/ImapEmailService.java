@@ -154,6 +154,64 @@ public class ImapEmailService {
     return best;
   }
 
+  public EmailResponse findLastEmailAny(String mailboxEmail) throws Exception {
+    if (username == null || username.isBlank() || password == null || password.isBlank()) {
+      throw new IllegalStateException("IMAP_USERNAME/IMAP_PASSWORD no están configuradas en variables de entorno.");
+    }
+
+    Properties props = new Properties();
+    props.put("mail.store.protocol", "imaps");
+    props.put("mail.imaps.host", host);
+    props.put("mail.imaps.port", String.valueOf(port));
+    props.put("mail.imaps.ssl.enable", "true");
+
+    String trust = (sslTrust == null || sslTrust.isBlank()) ? host : sslTrust.trim();
+    props.put("mail.imaps.ssl.trust", trust);
+
+    Session session = Session.getInstance(props);
+
+    Store store = null;
+    Folder inbox = null;
+
+    try {
+      store = session.getStore("imaps");
+      store.connect(host, port, username, password);
+
+      inbox = store.getFolder(folderName);
+      inbox.open(Folder.READ_ONLY);
+
+      Message last = scanLastMessagesAny(inbox, mailboxEmail, Math.max(1, maxScan));
+      if (last == null) {
+        throw new NoSuchElementException("No se encontró ningún correo reciente para: " + mailboxEmail);
+      }
+
+      String subject = safeString(last.getSubject());
+      String from = extractFrom(last);
+      Date received = last.getReceivedDate();
+      if (received == null) received = last.getSentDate();
+      Instant receivedAt = received != null ? received.toInstant() : null;
+
+      MailBodyExtractor.BodyResult bodyRes = MailBodyExtractor.extract(last);
+
+      return new EmailResponse(
+          "any",
+          mailboxEmail,
+          subject,
+          from,
+          receivedAt,
+          bodyRes.body(),
+          bodyRes.contentType()
+      );
+    } finally {
+      try {
+        if (inbox != null && inbox.isOpen()) inbox.close(false);
+      } catch (Exception ignored) {}
+      try {
+        if (store != null && store.isConnected()) store.close();
+      } catch (Exception ignored) {}
+    }
+  }
+
   private Message scanLastMessages(Folder folder, String targetEmail, ServiceFilter filter, int max) {
     try {
       int total = folder.getMessageCount();
@@ -174,6 +232,33 @@ public class ImapEmailService {
         if (matchesFilter(m, target, filter)) {
           return m;
         }
+      }
+
+      return null;
+    } catch (Exception e) {
+      return null;
+    }
+  }
+
+  private Message scanLastMessagesAny(Folder folder, String targetEmail, int max) {
+    try {
+      int total = folder.getMessageCount();
+      if (total <= 0) return null;
+
+      int start = Math.max(1, total - max + 1);
+      Message[] msgs = folder.getMessages(start, total);
+
+      FetchProfile fp = new FetchProfile();
+      fp.add(FetchProfile.Item.ENVELOPE);
+      folder.fetch(msgs, fp);
+
+      String target = (targetEmail == null) ? "" : targetEmail.trim().toLowerCase(Locale.ROOT);
+
+      // iterar de más nuevo a más viejo
+      for (int i = msgs.length - 1; i >= 0; i--) {
+        Message m = msgs[i];
+        if (target.isBlank()) return m;
+        if (matchesRecipient(m, target)) return m;
       }
 
       return null;

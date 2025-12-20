@@ -93,6 +93,33 @@ public class ServiceCatalog {
         )
     ));
 
+    services.put("spotify", new ServiceFilter(
+        "spotify",
+        "Spotify",
+        // Hacemos contains para cubrir variaciones (no-reply, mail.spotify.com, etc.).
+        java.util.List.of(
+            "spotify",
+            "@spotify.com",
+            "no-reply@spotify.com",
+            "noreply@spotify.com"
+        ),
+        java.util.List.of(
+            // Genéricos / comunes
+            "spotify",
+            "código",
+            "code",
+            "verification",
+            "verificación",
+            "iniciar sesión",
+            "inicio de sesión",
+            "login",
+            "restablece",
+            "restablecer",
+            "password",
+            "contraseña"
+        )
+    ));
+
     services.put("apple", new ServiceFilter(
         "apple",
         "Apple",
