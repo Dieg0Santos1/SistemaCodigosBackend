@@ -93,33 +93,6 @@ public class ServiceCatalog {
         )
     ));
 
-    services.put("spotify", new ServiceFilter(
-        "spotify",
-        "Spotify",
-        // Hacemos contains para cubrir variaciones (no-reply, mail.spotify.com, etc.).
-        java.util.List.of(
-            "spotify",
-            "@spotify.com",
-            "no-reply@spotify.com",
-            "noreply@spotify.com"
-        ),
-        java.util.List.of(
-            // Genéricos / comunes
-            "spotify",
-            "código",
-            "code",
-            "verification",
-            "verificación",
-            "iniciar sesión",
-            "inicio de sesión",
-            "login",
-            "restablece",
-            "restablecer",
-            "password",
-            "contraseña"
-        )
-    ));
-
     services.put("apple", new ServiceFilter(
         "apple",
         "Apple",
@@ -154,6 +127,41 @@ public class ServiceCatalog {
             "Reinicia tu contraseña de Crunchyroll",
             "reset",
             "restablece"
+        )
+    ));
+
+    services.put("youtube", new ServiceFilter(
+        "youtube",
+        "YouTube",
+        java.util.List.of("youtube", "@youtube.com", "@google.com"),
+        java.util.List.of(
+            "verification code",
+            "código",
+            "code",
+            "verificación",
+            "one-time",
+            "restablecer",
+            "reset"
+        )
+    ));
+
+    services.put("spotify", new ServiceFilter(
+        "spotify",
+        "Spotify",
+        java.util.List.of(
+            "spotify",
+            "@spotify.com",
+            "@accounts.spotify.com"
+        ),
+        java.util.List.of(
+            "código",
+            "code",
+            "verification",
+            "one-time",
+            "restablecer",
+            "reset",
+            "Restablecer tu contraseña de Spotify",
+            "Restablece tu contraseña de Spotify"
         )
     ));
   }
