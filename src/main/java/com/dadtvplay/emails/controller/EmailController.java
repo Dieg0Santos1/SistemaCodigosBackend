@@ -33,7 +33,7 @@ public class EmailController {
     String normalizedEmail = email.trim().toLowerCase();
     if (!isAllowedDomain(normalizedEmail)) {
       return ResponseEntity.badRequest().body(Map.of(
-          "error", "Email inválido. Debe terminar en @klbdescuentos.com"
+          "error", "Email inválido. Debe terminar en @dadtvplay.com"
       ));
     }
 
@@ -71,7 +71,7 @@ public class EmailController {
     String normalizedEmail = email.trim().toLowerCase();
     if (!isAllowedDomain(normalizedEmail)) {
       return ResponseEntity.badRequest().body(Map.of(
-          "error", "Email inválido. Debe terminar en @klbdescuentos.com"
+          "error", "Email inválido. Debe terminar en @dadtvplay.com"
       ));
     }
 
@@ -108,6 +108,6 @@ public class EmailController {
   }
 
   private boolean isAllowedDomain(String email) {
-    return email.endsWith("@klbdescuentos.com") && email.contains("@") && !email.startsWith("@");
+    return email.endsWith("@dadtvplay.com") && email.contains("@") && !email.startsWith("@");
   }
 }

@@ -48,7 +48,7 @@ public class ImapEmailService {
     props.put("mail.imaps.ssl.enable", "true");
 
     // Para servidores con certificado self-signed o cadena incompleta.
-    // Recomendado: IMAP_SSL_TRUST=mail.klbdescuentos.com (o "*" si no hay alternativa).
+    // Ejemplo recomendado: IMAP_SSL_TRUST=mail.tudominio.com (o "*" si no hay alternativa).
     String trust = (sslTrust == null || sslTrust.isBlank()) ? host : sslTrust.trim();
     props.put("mail.imaps.ssl.trust", trust);
 
