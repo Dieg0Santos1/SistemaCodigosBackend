@@ -58,6 +58,7 @@ public class ServiceCatalog {
             "amazon.com: Sign-in attempt",
             "amazon.com: Intento de inicio de sesión",
             "Ayuda con la contraseña de Amazon",
+            "Asistencia con la contraseña de Amazon",
             "otp",
             "código",
             "code",
