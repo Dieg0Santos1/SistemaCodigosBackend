@@ -33,7 +33,7 @@ public class EmailController {
     String normalizedEmail = email.trim().toLowerCase();
     if (!isAllowedDomain(normalizedEmail)) {
       return ResponseEntity.badRequest().body(Map.of(
-          "error", "Email inválido. Debe terminar en @dadtvplay.com"
+          "error", "Email inválido. Debe terminar en @klbdescuentos.com"
       ));
     }
 
@@ -47,36 +47,6 @@ public class EmailController {
 
     try {
       EmailResponse res = imapEmailService.findLastEmail(normalizedEmail, filterOpt.get());
-      return ResponseEntity.ok(res);
-    } catch (NoSuchElementException e) {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of(
-          "error", e.getMessage()
-      ));
-    } catch (IllegalStateException e) {
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of(
-          "error", e.getMessage()
-      ));
-    } catch (Exception e) {
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of(
-          "error", "Error consultando IMAP",
-          "details", e.getClass().getSimpleName() + ": " + e.getMessage()
-      ));
-    }
-  }
-
-  @GetMapping("/email/last-any")
-  public ResponseEntity<?> lastEmailAny(
-      @RequestParam("email") @NotBlank String email
-  ) {
-    String normalizedEmail = email.trim().toLowerCase();
-    if (!isAllowedDomain(normalizedEmail)) {
-      return ResponseEntity.badRequest().body(Map.of(
-          "error", "Email inválido. Debe terminar en @dadtvplay.com"
-      ));
-    }
-
-    try {
-      EmailResponse res = imapEmailService.findLastEmailAny(normalizedEmail);
       return ResponseEntity.ok(res);
     } catch (NoSuchElementException e) {
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of(
@@ -108,6 +78,6 @@ public class EmailController {
   }
 
   private boolean isAllowedDomain(String email) {
-    return email.endsWith("@dadtvplay.com") && email.contains("@") && !email.startsWith("@");
+    return email.endsWith("@klbdescuentos.com") && email.contains("@") && !email.startsWith("@");
   }
 }
